@@ -1,0 +1,43 @@
+<!-- форма для отправки сообщений -->
+    <script src="/jquery.js"></script>
+<form name="publish">
+  <input type="text" name="message">
+  <input type="submit" value="Отправить">
+</form>
+
+<!-- здесь будут появляться входящие сообщения -->
+<div id="subscribe">
+sssssssssssssss
+</div>
+kkkkkkkkkkkkkkkkkkk
+<script>
+// создать подключение
+var socket = new WebSocket("ws://localhost:8081");
+
+// отправить сообщение из формы publish
+document.forms.publish.onsubmit = function() {
+  var outgoingMessage = this.message.value;
+
+  socket.send(outgoingMessage);
+  return false;
+};
+
+// обработчик входящих сообщений
+socket.onmessage = function(event) {
+  var incomingMessage = event.data;
+  showMessage(incomingMessage);
+};
+
+// показать сообщение в div#subscribe
+function showMessage(message) {
+  var DATA = JSON.parse(message)
+  var str = ""
+  for(var key in DATA)
+  {
+    str+="<div>"+DATA[key].name+"  "+DATA[key].pin+" == "+DATA[key].val+"</div>"
+  }
+  $('#subscribe').html(str)
+  console.log(message)
+
+}
+</script>
